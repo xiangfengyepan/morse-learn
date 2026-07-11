@@ -28,59 +28,9 @@ body {
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
   -webkit-overflow-scrolling: touch;
+  background-color: $red; /* Ensure the red background extends to the bottom */
   height: 100%;
   min-height: 100%;
-}
-
-/* Transparent so the #bg-slideshow (z-index:-1) shows through; the red on
-   <html> stays as the ultimate fallback. */
-body {
-  background-color: transparent;
-}
-
-/* Background slideshow: cycles through the images in sequence, behind the
-   (transparent) game canvas. Pure CSS crossfade, no JS. */
-#bg-slideshow {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background: $red;
-}
-
-.bg-slide {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-  opacity: 0;
-  animation: bg-cycle 24s infinite;
-}
-
-.bg-slide--1 {
-  background-image: url("../assets/images/background.jpg");
-  animation-delay: 0s;
-}
-
-.bg-slide--2 {
-  background-image: url("../assets/images/background2.jpg");
-  animation-delay: 8s;
-}
-
-.bg-slide--3 {
-  background-image: url("../assets/images/background3.jpg");
-  animation-delay: 16s;
-}
-
-/* 3 slides, 8s apart on a 24s loop. Each holds for a third, then the next is
-   already fully opaque on top before this one fades out underneath - so an
-   image is always covering the red <html> fallback (no flash between slides). */
-@keyframes bg-cycle {
-  0% { opacity: 1; }
-  33.333% { opacity: 1; }
-  41.666% { opacity: 0; }
-  91.666% { opacity: 0; }
-  100% { opacity: 1; }
 }
 
 /* Landscape orientation adjustments */
@@ -435,7 +385,7 @@ canvas {
 
 // loading overlay
 #loading-overlay {
-  background-color: rgba($black, 0.5); // scrim over the background image; keeps the light spinner legible
+  background-color: $red;
   height: 100%;
   left: 0;
   opacity: 0;

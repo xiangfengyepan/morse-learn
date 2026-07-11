@@ -137,7 +137,7 @@ class App {
         resolution: config.GLOBALS.devicePixelRatio,
         preload: this.preload,
         create: this.create
-      }, true /* transparent: let the CSS background image show through */);
+      });
       console.log('Game created successfully');
     } catch (error) {
       console.error('Error starting game app:', error);
@@ -377,6 +377,15 @@ class App {
       }
       if (GameApp.assetPaths.badge) {
         this.game.load.image('badge', GameApp.assetPaths.badge);
+      }
+
+      // Word-section background images (one per section instead of a solid color)
+      for (const key of ['sectionbg0', 'sectionbg1', 'sectionbg2']) {
+        if (GameApp.assetPaths[key]) {
+          this.game.load.image(key, GameApp.assetPaths[key]);
+        } else {
+          console.warn(`Asset path for ${key} not found`);
+        }
       }
 
       // Video
