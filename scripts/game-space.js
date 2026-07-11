@@ -773,7 +773,7 @@ class GameSpace {
             .to(
               { x: letterX - distBetweenTargetAndNextLetter },
               config.animations.SLIDE_TRANSITION,
-              Phaser.Easing.Exponential.Out,
+              Phaser.Easing.Sinusoidal.InOut,
               true,
               config.animations.SLIDE_END_DELAY
             );
@@ -799,7 +799,7 @@ class GameSpace {
             .to(
               { x: letterX - distBetweenTargetAndNextLetter },
               config.animations.SLIDE_TRANSITION,
-              Phaser.Easing.Exponential.Out,
+              Phaser.Easing.Sinusoidal.InOut,
               true,
               config.animations.SLIDE_END_DELAY
             );
@@ -811,7 +811,7 @@ class GameSpace {
             .to(
               { x: letterX - distBetweenTargetAndNextLetter },
               config.animations.SLIDE_TRANSITION,
-              Phaser.Easing.Exponential.Out,
+              Phaser.Easing.Sinusoidal.InOut,
               true,
               config.animations.SLIDE_END_DELAY
             );
@@ -895,7 +895,7 @@ class GameSpace {
             .to(
               { x: pillX - distBetweenTargetAndNextLetter },
               config.animations.SLIDE_TRANSITION,
-              Phaser.Easing.Exponential.Out,
+              Phaser.Easing.Sinusoidal.InOut,
               true,
               config.animations.SLIDE_END_DELAY
             );
@@ -906,7 +906,7 @@ class GameSpace {
           .to(
             { x: bgX - distBetweenTargetAndNextLetter },
             config.animations.SLIDE_TRANSITION,
-            Phaser.Easing.Exponential.Out,
+            Phaser.Easing.Sinusoidal.InOut,
             true,
             config.animations.SLIDE_END_DELAY
           );
