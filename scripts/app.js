@@ -38,6 +38,21 @@ class App {
       // Make assetPaths available to the whole class
       this.assetPaths = assetPathsModule;
 
+      // Allow choosing the starting level via localStorage. Valid values are
+      // the course keys in config.courses: 'alphabet', 'numbers', 'keyboard'.
+      // Falls back to the default config.course when unset/invalid.
+      try {
+        const storedCourse = (typeof localStorage !== 'undefined')
+          ? localStorage.getItem('selectedCourse')
+          : null;
+        if (storedCourse && config.courses && config.courses[storedCourse]) {
+          console.log('Using course from localStorage:', storedCourse);
+          config.course = storedCourse;
+        }
+      } catch (e) {
+        console.warn('Could not read selectedCourse from localStorage:', e);
+      }
+
       // Initialize course with error handling
       try {
         if (config.courses && config.course && config.courses[config.course]) {
