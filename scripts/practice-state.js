@@ -261,6 +261,24 @@ class PracticeState {
     this.createEndButtons();
   }
 
+  // Called by Phaser when leaving/restarting this state. Tear down the
+  // MorseBoard so its dot/dash click listeners don't accumulate on the shared
+  // DOM buttons across practice sessions.
+  shutdown() {
+    if (this.morseBoard) {
+      try {
+        this.morseBoard.destroy();
+      } catch (error) {
+        console.error('Error destroying morse board on shutdown:', error);
+      }
+      this.morseBoard = null;
+    }
+    if (this.statusTimeout) {
+      clearTimeout(this.statusTimeout);
+      this.statusTimeout = null;
+    }
+  }
+
   createEndButtons() {
     this.practiceAgainButton = this.game.add.text(this.game.world.centerX, 500, 'Practice Again', { align: 'center' });
     this.practiceAgainButton.fill = '#FFFFFF';

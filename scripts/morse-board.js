@@ -503,9 +503,15 @@ class MorseBoard {
       this.progressAnimationFrame = null;
     }
 
-    this.dotButton.removeEventListener("click", this.boundOnClick);
-    this.dashButton.removeEventListener("click", this.boundOnClick);
-    this.output.removeEventListener("commit", this.boundCommit);
+    if (this.dotButton) {
+      this.dotButton.removeEventListener("click", this.boundOnClick);
+    }
+    if (this.dashButton) {
+      this.dashButton.removeEventListener("click", this.boundOnClick);
+    }
+    if (this.output) {
+      this.output.removeEventListener("commit", this.boundCommit);
+    }
 
     if (this.config.notification && this.el) {
       document.body.removeChild(this.el);
@@ -516,18 +522,17 @@ class MorseBoard {
     if (this.timeout) {
       clearTimeout(this.timeout);
     }
-    if (this.dotAudio && this.dashAudio) {
-      document.body.removeChild(this.dotAudio);
-      document.body.removeChild(this.dashAudio);
+
+    // Only remove the audio elements this board created and appended.
+    // The dot/dash buttons, output field and morseboard container are owned
+    // by index.html and shared across states, so they must NOT be removed
+    // here - doing so would break the next MorseBoard created on state restart.
+    if (this.dotAudio && this.dotAudio.parentNode) {
+      this.dotAudio.parentNode.removeChild(this.dotAudio);
     }
-    if (this.buttonBox) {
-      this.buttonBox.removeChild(this.dotButton);
-      this.buttonBox.removeChild(this.dashButton);
+    if (this.dashAudio && this.dashAudio.parentNode) {
+      this.dashAudio.parentNode.removeChild(this.dashAudio);
     }
-    if (this.output && this.background) {
-      this.background.removeChild(this.output);
-    }
-    document.body.removeChild(this.background);
   }
 
   detectIE() {

@@ -91,6 +91,20 @@ class GameState {
     }
   }
 
+  // Called by Phaser when leaving/restarting this state (e.g. moving from the
+  // letters course to the numbers course). Tear down the previous MorseBoard so
+  // its dot/dash click listeners don't accumulate on the shared DOM buttons.
+  shutdown() {
+    if (this.gameSpace && this.gameSpace.morseBoard) {
+      try {
+        this.gameSpace.morseBoard.destroy();
+      } catch (error) {
+        console.error('Error destroying morse board on shutdown:', error);
+      }
+      this.gameSpace.morseBoard = null;
+    }
+  }
+
   // Save progress to localStorage
   saveProgress() {
     if (typeof(Storage) !== 'undefined') {
