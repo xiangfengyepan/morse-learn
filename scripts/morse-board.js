@@ -28,11 +28,45 @@ class MorseBoard {
       if (savedOneSwitchMode !== null) {
         options.oneSwitchMode = savedOneSwitchMode === "true";
       }
+
+      // Auto-commit delay in ms (0 = manual: commit only with the space bar)
+      const savedAutoCommitMs = localStorage.getItem("auto_commit_ms");
+      if (savedAutoCommitMs !== null && savedAutoCommitMs !== "") {
+        const ms = parseInt(savedAutoCommitMs, 10);
+        if (!isNaN(ms)) {
+          options.debounce = ms;
+        }
+      }
     }
 
     this.config = this.mergeSettings(options);
+
+    // Keep the default key maps so we can rebuild them = defaults + the user's
+    // optional custom key (one extra key per button, set in Settings).
+    this.baseDotKeyMap = this.config.dotKeyMap.slice();
+    this.baseDashKeyMap = this.config.dashKeyMap.slice();
+    if (typeof Storage !== "undefined" && options.loadPreferences !== false) {
+      const customDot = parseInt(localStorage.getItem("custom_dot_key"), 10);
+      const customDash = parseInt(localStorage.getItem("custom_dash_key"), 10);
+      this.applyCustomKeys(
+        isNaN(customDot) ? null : customDot,
+        isNaN(customDash) ? null : customDash
+      );
+    }
+
     this.game = options.game;
     this.create();
+  }
+
+  // Rebuild the dot/dash key maps as defaults + one optional custom key each.
+  // Pass null to remove a custom key. Used at startup and for live updates.
+  applyCustomKeys(dotKey, dashKey) {
+    this.config.dotKeyMap = this.baseDotKeyMap.concat(
+      (dotKey === null || dotKey === undefined || isNaN(dotKey)) ? [] : [dotKey]
+    );
+    this.config.dashKeyMap = this.baseDashKeyMap.concat(
+      (dashKey === null || dashKey === undefined || isNaN(dashKey)) ? [] : [dashKey]
+    );
   }
 
   mergeSettings(options) {
@@ -373,6 +407,11 @@ class MorseBoard {
   debounce() {
     var _this = this;
     clearTimeout(this.timeout);
+    // A delay of 0 (or less) means manual mode: no auto-commit, the user
+    // commits the current sequence with the space bar instead.
+    if (!this.config.debounce || this.config.debounce <= 0) {
+      return;
+    }
     this.timeout = setTimeout(function () {
       if (_this.output.value && _this.output.value !== null) {
         var eventDetail = {
@@ -408,6 +447,12 @@ class MorseBoard {
       }
       clearTimeout(_this.timeout);
     }, this.config.debounce);
+  }
+
+  // Update the auto-commit delay live (0 = manual/space-bar only).
+  setAutoCommitMs(ms) {
+    this.config.debounce = ms;
+    clearTimeout(this.timeout);
   }
 
   commit(e) {

@@ -462,6 +462,10 @@ class TitleState {
     const keyboardToggleNew = document.getElementById('keyboard-toggle-new');
     const oneSwitchToggleNew = document.getElementById('one-switch-toggle-new');
     const consentToggleNew = document.getElementById('consent-toggle-new');
+    const blurToggle = document.getElementById('blur-toggle');
+    const autocommitInput = document.getElementById('autocommit-input');
+    const customDotKeyInput = document.getElementById('custom-dot-key');
+    const customDashKeyInput = document.getElementById('custom-dash-key');
 
     // Get references to the buttons
     const resetButtonNew = document.getElementById('reset-button-new');
@@ -480,6 +484,20 @@ class TitleState {
     // Initialize one-switch toggle state
     const oneSwitchMode = getBoolFromLocalStore('one_switch_mode');
     this.updateToggleState(oneSwitchToggleNew, oneSwitchMode);
+
+    // Initialize background-blur toggle state (defaults to on for readability)
+    const bgBlurOn = localStorage.getItem('background_blur') !== 'false';
+    this.updateToggleState(blurToggle, bgBlurOn);
+
+    // Initialize auto-commit spinner (ms; 0 = manual/space-bar; default 2000)
+    const savedAutoCommitMs = localStorage.getItem('auto_commit_ms');
+    autocommitInput.value = (savedAutoCommitMs !== null && savedAutoCommitMs !== '')
+      ? savedAutoCommitMs
+      : '2000';
+
+    // Initialize custom dot/dash key fields from their saved labels
+    customDotKeyInput.value = localStorage.getItem('custom_dot_key_label') || '';
+    customDashKeyInput.value = localStorage.getItem('custom_dash_key_label') || '';
 
     // Show the settings button
     settingsButton.style.display = 'block';
@@ -657,6 +675,74 @@ class TitleState {
         trackingToggle.classList[newState ? "remove" : "add"]("disabled");
       }
     });
+
+    blurToggle.addEventListener('click', () => {
+      const newState = localStorage.getItem('background_blur') === 'false'; // toggle
+      localStorage.setItem('background_blur', newState);
+      this.updateToggleState(blurToggle, newState);
+
+      // Apply live if a game is in progress
+      if (this.hasStarted && this.game.state.current === 'game') {
+        const gameState = this.game.state.states.game;
+        if (gameState && gameState.gameSpace && gameState.gameSpace.refreshBackgroundBlur) {
+          gameState.gameSpace.refreshBackgroundBlur();
+        }
+      }
+    });
+
+    autocommitInput.addEventListener('change', () => {
+      // Snap to a 200ms increment and clamp to 0..5000 (0 = manual)
+      let ms = parseInt(autocommitInput.value, 10);
+      if (isNaN(ms)) ms = 0;
+      ms = Math.max(0, Math.min(5000, Math.round(ms / 200) * 200));
+      autocommitInput.value = ms;
+      localStorage.setItem('auto_commit_ms', ms);
+
+      // Apply live if a game is in progress
+      if (this.hasStarted && this.game.state.current === 'game') {
+        const gs = this.game.state.states.game;
+        if (gs && gs.gameSpace && gs.gameSpace.morseBoard && gs.gameSpace.morseBoard.setAutoCommitMs) {
+          gs.gameSpace.morseBoard.setAutoCommitMs(ms);
+        }
+      }
+    });
+
+    // Custom dot/dash keys: focus a field and press a key to assign one extra
+    // key (in addition to the defaults J/. and K/-). Esc/Backspace clears it.
+    const applyCustomKeysLive = () => {
+      if (this.hasStarted && this.game.state.current === 'game') {
+        const gs = this.game.state.states.game;
+        if (gs && gs.gameSpace && gs.gameSpace.morseBoard && gs.gameSpace.morseBoard.applyCustomKeys) {
+          const cd = parseInt(localStorage.getItem('custom_dot_key'), 10);
+          const ck = parseInt(localStorage.getItem('custom_dash_key'), 10);
+          gs.gameSpace.morseBoard.applyCustomKeys(isNaN(cd) ? null : cd, isNaN(ck) ? null : ck);
+        }
+      }
+    };
+
+    const captureCustomKey = (input, codeKey, labelKey) => {
+      input.addEventListener('keydown', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.key === 'Escape' || e.key === 'Backspace' || e.key === 'Delete') {
+          localStorage.removeItem(codeKey);
+          localStorage.removeItem(labelKey);
+          input.value = '';
+        } else {
+          const label = e.key === ' '
+            ? 'Space'
+            : (e.key.length === 1 ? e.key.toUpperCase() : e.key);
+          localStorage.setItem(codeKey, e.keyCode);
+          localStorage.setItem(labelKey, label);
+          input.value = label;
+        }
+        input.blur();
+        applyCustomKeysLive();
+      });
+    };
+
+    captureCustomKey(customDotKeyInput, 'custom_dot_key', 'custom_dot_key_label');
+    captureCustomKey(customDashKeyInput, 'custom_dash_key', 'custom_dash_key_label');
 
     // Add event listeners for buttons
     resetButtonNew.addEventListener('click', () => {
