@@ -379,15 +379,6 @@ class App {
         this.game.load.image('badge', GameApp.assetPaths.badge);
       }
 
-      // Word-section background images (one per section instead of a solid color)
-      for (const key of ['sectionbg0', 'sectionbg1', 'sectionbg2']) {
-        if (GameApp.assetPaths[key]) {
-          this.game.load.image(key, GameApp.assetPaths[key]);
-        } else {
-          console.warn(`Asset path for ${key} not found`);
-        }
-      }
-
       // Video
       console.log('Loading intro video');
       if (GameApp.assetPaths.intro) {
