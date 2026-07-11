@@ -131,6 +131,45 @@
               </div>
             </div>
           </div>
+
+          <div class="setting-item">
+            <div class="setting-label">
+              <i class="fa fa-tint"></i>
+              <span>Blur Background</span>
+            </div>
+            <div class="setting-toggle" id="blur-toggle">
+              <div class="toggle-switch">
+                <div class="toggle-slider"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-label">
+              <i class="fa fa-clock"></i>
+              <span>Auto-commit (ms, 0 = manual)</span>
+            </div>
+            <input type="number" id="autocommit-input" class="setting-number"
+                   min="0" max="5000" step="200" />
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-label">
+              <i class="fa fa-circle"></i>
+              <span>Custom Dot key</span>
+            </div>
+            <input type="text" id="custom-dot-key" class="setting-key" readonly
+                   placeholder="Press a key" title="Focus and press a key. Esc to clear." />
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-label">
+              <i class="fa fa-minus"></i>
+              <span>Custom Dash key</span>
+            </div>
+            <input type="text" id="custom-dash-key" class="setting-key" readonly
+                   placeholder="Press a key" title="Focus and press a key. Esc to clear." />
+          </div>
         </div>
 
         <div class="settings-buttons">

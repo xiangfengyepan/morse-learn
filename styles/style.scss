@@ -645,6 +645,10 @@ canvas {
 
     &.active {
       background-color: #00a651;
+
+      .toggle-slider {
+        transform: translateX(26px);
+      }
     }
 
     .toggle-slider {
@@ -656,10 +660,32 @@ canvas {
       background-color: white;
       border-radius: 50%;
       transition: transform 0.3s;
+    }
+  }
 
-      .active & {
-        transform: translateX(26px);
-      }
+  .setting-number,
+  .setting-key {
+    width: 90px;
+    padding: 6px 8px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #231f20;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+
+    &:focus {
+      outline: none;
+      border-color: #00a651;
+    }
+  }
+
+  .setting-key {
+    cursor: pointer;
+
+    &:focus {
+      background-color: #eafaf0;
     }
   }
 
