@@ -16,6 +16,11 @@ import { Word } from "./word";
 import { MorseBoard } from './morse-board'
 let _ = require("lodash");
 const config = require("./config");
+
+// Gaussian blur radius (px, at source-image resolution) applied to the section
+// background images when "Blur Background" is on.
+const SECTION_BLUR_PX = 22;
+
 // Create our own delay function using setTimeout
 function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -54,21 +59,50 @@ class GameSpace {
     ];
   }
 
+  // Whether the "Blur Background" setting is on (default true).
+  static isBlurOn() {
+    return typeof localStorage === 'undefined'
+      ? true
+      : localStorage.getItem('background_blur') !== 'false';
+  }
+
+  // Return a blurred version of an image texture, built once per key and cached
+  // for the life of this game space. Blurs the original image on an offscreen
+  // canvas (native ctx blur) so the letters read clearly over a soft background
+  // - no pre-blurred image files needed, and the amount is a single number.
+  getBlurredTexture(key) {
+    this._blurCache = this._blurCache || {};
+    if (this._blurCache[key]) return this._blurCache[key];
+    const img = this.game.cache.getImage(key, true);
+    if (!img || !img.data) return null;
+    const src = img.data;
+    const bmd = this.game.make.bitmapData(src.width, src.height);
+    bmd.ctx.filter = `blur(${SECTION_BLUR_PX}px)`;
+    bmd.ctx.drawImage(src, 0, 0);
+    bmd.ctx.filter = 'none';
+    bmd.dirty = true;
+    this._blurCache[key] = bmd;
+    return bmd;
+  }
+
+  // Re-apply the blur setting to all existing word sections (live toggle).
+  refreshBackgroundBlur() {
+    const blurOn = GameSpace.isBlurOn();
+    for (let i = 0; i < this.currentWords.length; i++) {
+      const word = this.currentWords[i];
+      if (word.setBackgroundBlur) {
+        word.setBackgroundBlur(blurOn);
+      }
+    }
+  }
+
   // Update the word backgrounds to mute non-current words
   updateWordBackgrounds() {
     for (let i = 0; i < this.currentWords.length; i++) {
       const word = this.currentWords[i];
       const isCurrentWord = i === this.currentWordIndex;
-
-      // Apply a tint to mute the colors of non-current words
       if (word.background) {
-        if (isCurrentWord) {
-          // Current word - full brightness
-          word.background.tint = 0xFFFFFF; // No tint (full color)
-        } else {
-          // Non-current word - muted colors
-          word.background.tint = 0xAAAAAA; // Slight gray tint to mute the color
-        }
+        word.background.tint = isCurrentWord ? 0xFFFFFF : 0xAAAAAA;
       }
     }
   }
@@ -301,9 +335,11 @@ class GameSpace {
       let letter = word.myLetters[word.currentLetterIndex];
       console.log('First word:', word.myLetters.join(''), 'First letter:', letter);
 
-      // Position the first word in the center of the screen
+      // Position the first word in the center of the screen. Extend its
+      // background section to the left screen edge so the left is covered on
+      // entry (there is no previous word to fill it yet).
       const centerX = this.game.world.centerX;
-      word.setPosition(centerX);
+      word.setPosition(centerX, { extendLeftTo: 0 });
       console.log('Word positioned at center:', centerX);
 
       // Update word backgrounds to highlight the current word
@@ -474,6 +510,10 @@ class GameSpace {
       const colorIndex = this.currentWords.length % this.allBgColors.length;
       word.myColor = this.allBgColors[colorIndex];
       word.myColorString = this.allBgColorsString[colorIndex];
+
+      // Assign one of the 3 section background images (cycles so each of the
+      // ~3 visible sections shows a different image instead of a solid color).
+      word.myBgKey = 'sectionbg' + (this.currentWords.length % 3);
 
       // Set other properties
       word.row = 0;
