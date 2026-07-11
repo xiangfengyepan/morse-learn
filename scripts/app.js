@@ -122,7 +122,7 @@ class App {
         resolution: config.GLOBALS.devicePixelRatio,
         preload: this.preload,
         create: this.create
-      });
+      }, true /* transparent: let the CSS background image show through */);
       console.log('Game created successfully');
     } catch (error) {
       console.error('Error starting game app:', error);
