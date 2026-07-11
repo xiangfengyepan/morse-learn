@@ -46,86 +46,23 @@ class Word {
     return this.letterObjects[this.currentLetterIndex];
   }
 
-  // Swap the section background between the blurred and plain texture in place,
-  // keeping its current position, crop and size (used by the Blur setting).
-  setBackgroundBlur(blurOn) {
-    if (!this._bgIsImage || !this.background || !this._bgCropRect) return;
-    const texture = (blurOn && this.parent.getBlurredTexture)
-      ? (this.parent.getBlurredTexture(this.myBgKey) || this.myBgKey)
-      : this.myBgKey;
-    const savedTint = this.background.tint;
-    this.background.loadTexture(texture);
-    this.background.crop(this._bgCropRect);
-    this.background.width = this._bgTargetW;
-    this.background.height = this._bgTargetH;
-    this.background.tint = savedTint;
-  }
+  setPosition(startX) {
+    let rect = this.game.add.graphics(0, 0);
+    rect.beginFill(this.myColor);
 
-  setPosition(startX, options = {}) {
-    // Calculate the width of the background band
-    const baseWidth = (config.app.wordBrickSize * this.myLetters.length) + (config.app.wordBrickSize * 2);
-    const bgHeight = this.game.world.height;
+    // Calculate the width of the background
+    const bgWidth = (config.app.wordBrickSize * this.myLetters.length) + (config.app.wordBrickSize * 2);
 
-    // Left edge of the band (single letters are centered on startX)
-    const baseLeftX = (this.myLetters.length === 1)
-      ? startX - (baseWidth / 2)
-      : startX - config.app.wordBrickSize;
-
-    // Optionally extend the band's left edge (used for the very first word so
-    // the left section is covered on entry, when there is no previous word to
-    // fill it yet). The right edge and the letter positions stay put.
-    const leftX = (typeof options.extendLeftTo === 'number')
-      ? Math.min(options.extendLeftTo, baseLeftX)
-      : baseLeftX;
-    const bgWidth = (baseLeftX + baseWidth) - leftX;
-
-    let bg;
-    const hasImage = this.myBgKey && this.game.cache.checkImageKey(this.myBgKey);
-    if (hasImage) {
-      // Section background image: crop the texture to the band's aspect ratio
-      // (centered) then stretch that crop to fill the band. This fills the tall
-      // section with no distortion and without bleeding into neighbouring
-      // sections, so no mask is needed and it slides as a single object.
-      const blurOn = typeof localStorage === 'undefined'
-        ? true
-        : localStorage.getItem('background_blur') !== 'false';
-      const texture = (blurOn && this.parent.getBlurredTexture)
-        ? (this.parent.getBlurredTexture(this.myBgKey) || this.myBgKey)
-        : this.myBgKey;
-
-      bg = this.game.add.sprite(leftX, 0, texture);
-      bg.anchor.set(0, 0);
-      const texW = bg.texture.width;
-      const texH = bg.texture.height;
-      const bandAspect = bgWidth / bgHeight;
-      let cropW, cropH;
-      if ((texW / texH) > bandAspect) {
-        cropH = texH;
-        cropW = texH * bandAspect;
-      } else {
-        cropW = texW;
-        cropH = texW / bandAspect;
-      }
-      // Remember the crop/size so we can rebuild the texture (blurred vs. plain)
-      // in place when the "Blur Background" setting is toggled during a game.
-      this._bgCropRect = new Phaser.Rectangle((texW - cropW) / 2, (texH - cropH) / 2, cropW, cropH);
-      this._bgTargetW = bgWidth;
-      this._bgTargetH = bgHeight;
-      this._bgIsImage = true;
-      bg.crop(this._bgCropRect);
-      bg.width = bgWidth;
-      bg.height = bgHeight;
+    // For single letters, center the background around the startX position
+    if (this.myLetters.length === 1) {
+      rect.drawRect(startX - (bgWidth / 2), 0, bgWidth, 5000);
     } else {
-      // Fallback: original solid-colour block
-      this._bgIsImage = false;
-      bg = this.game.add.graphics(0, 0);
-      bg.beginFill(this.myColor);
-      bg.drawRect(leftX, 0, bgWidth, 5000);
-      bg.endFill();
+      rect.drawRect(startX - config.app.wordBrickSize, 0, bgWidth, 5000);
     }
 
+    rect.endFill();
     this.myStartX = startX;
-    this.background = bg;
+    this.background = rect;
 
     // Move gameSpaceGroup to back
     this.parent.gameSpaceGroup.add(this.background);

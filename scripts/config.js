@@ -88,7 +88,7 @@ const config = {
   animations: {
     SLIDE_START_DELAY: 400,
     SLIDE_END_DELAY: 600,
-    SLIDE_TRANSITION: 750,
+    SLIDE_TRANSITION: 600,
   },
   courses: {
     alphabet: {

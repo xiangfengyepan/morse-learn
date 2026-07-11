@@ -462,7 +462,6 @@ class TitleState {
     const keyboardToggleNew = document.getElementById('keyboard-toggle-new');
     const oneSwitchToggleNew = document.getElementById('one-switch-toggle-new');
     const consentToggleNew = document.getElementById('consent-toggle-new');
-    const blurToggle = document.getElementById('blur-toggle');
     const autocommitInput = document.getElementById('autocommit-input');
     const customDotKeyInput = document.getElementById('custom-dot-key');
     const customDashKeyInput = document.getElementById('custom-dash-key');
@@ -484,10 +483,6 @@ class TitleState {
     // Initialize one-switch toggle state
     const oneSwitchMode = getBoolFromLocalStore('one_switch_mode');
     this.updateToggleState(oneSwitchToggleNew, oneSwitchMode);
-
-    // Initialize background-blur toggle state (defaults to on for readability)
-    const bgBlurOn = localStorage.getItem('background_blur') !== 'false';
-    this.updateToggleState(blurToggle, bgBlurOn);
 
     // Initialize auto-commit spinner (ms; 0 = manual/space-bar; default 2000)
     const savedAutoCommitMs = localStorage.getItem('auto_commit_ms');
@@ -673,20 +668,6 @@ class TitleState {
       const trackingToggle = document.querySelector(".consent-toggle");
       if (trackingToggle) {
         trackingToggle.classList[newState ? "remove" : "add"]("disabled");
-      }
-    });
-
-    blurToggle.addEventListener('click', () => {
-      const newState = localStorage.getItem('background_blur') === 'false'; // toggle
-      localStorage.setItem('background_blur', newState);
-      this.updateToggleState(blurToggle, newState);
-
-      // Apply live if a game is in progress
-      if (this.hasStarted && this.game.state.current === 'game') {
-        const gameState = this.game.state.states.game;
-        if (gameState && gameState.gameSpace && gameState.gameSpace.refreshBackgroundBlur) {
-          gameState.gameSpace.refreshBackgroundBlur();
-        }
       }
     });
 

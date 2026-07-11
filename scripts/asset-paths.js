@@ -31,9 +31,6 @@ import closeIcon from '../assets/images/close.svg';
 import badgeIcon from '../assets/images/badge.svg';
 import introVideo from '../assets/videos/intro.mp4';
 import nohintImage from '../assets/images/nohint.png';
-import sectionBg0 from '../assets/images/background.jpg';
-import sectionBg1 from '../assets/images/background2.jpg';
-import sectionBg2 from '../assets/images/background3.jpg';
 
 // Sounds
 import periodSoundFile from '../assets/sounds/period.mp3';
@@ -131,9 +128,6 @@ const assetPaths = {
   badge: badgeIcon,
   intro: introVideo,
   nohint: nohintImage,
-  sectionbg0: sectionBg0,
-  sectionbg1: sectionBg1,
-  sectionbg2: sectionBg2,
 
   periodSound: periodSoundFile,
   dashSound: dashSoundFile,
