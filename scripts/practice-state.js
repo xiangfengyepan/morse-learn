@@ -122,7 +122,7 @@ class PracticeState {
     this.helpText = this.game.add.text(
       this.game.world.centerX,
       115,
-      'Type each phrase in Morse. Wrong letters are flagged and skipped.',
+      'Type each phrase in Morse. Wrong letters are flagged - retry until correct.',
       { align: 'center' }
     );
     this.helpText.fill = '#E6F2FF';
@@ -234,12 +234,18 @@ class PracticeState {
     const correct = letter === expected;
 
     if (!correct) {
+      // Wrong letter: count the error but stay on the same letter so the user
+      // has to type it correctly to move on (no auto-skip).
       this.totalErrors += 1;
       this.flagError(expected);
       if (this.game.have_audio) {
         this.game.customSoundManager.playSound('wrong');
       }
-    } else if (this.game.have_audio) {
+      this.renderPhrase();
+      return;
+    }
+
+    if (this.game.have_audio) {
       this.game.customSoundManager.playSound('correct');
     }
 
