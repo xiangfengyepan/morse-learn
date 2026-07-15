@@ -1055,6 +1055,15 @@ const incrementAnalyticsCount = (key) => (letter) => {
     analyticsData = JSON.parse(analyticsData)
   }
 
+  // Ensure an entry exists for this letter. EMPTY_ANALYTICS only lists the
+  // alphabet, so numbers ('0'-'9') and keyboard courses have no entry yet;
+  // without this, analyticsData[letter] is undefined and the next line throws,
+  // which aborts checkMatch before the letter advances (numbers wouldn't
+  // progress and analytics never recorded).
+  if (!analyticsData[letter]) {
+    analyticsData[letter] = { wrong: 0, correct: 0 };
+  }
+
   // Increment the wrong or correct count
   analyticsData[letter][key] = analyticsData[letter][key] + 1;
 
