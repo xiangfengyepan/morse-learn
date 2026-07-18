@@ -828,12 +828,28 @@ class CongratulationsState {
           this.game.course = newCourse;
           console.log('Updated global course to:', nextCourseName);
 
-          // Reset the letter score dictionary for the new course
-          const newLetterScoreDict = {};
+          // Load existing progress for the next course if the user has played
+          // it before; otherwise start it fresh at 0. (Previously this always
+          // reset to 0, wiping any saved progress for that course on entry.)
+          let newLetterScoreDict = {};
+          if (typeof Storage !== 'undefined' && newCourse.storageKey) {
+            const savedNext = localStorage.getItem(newCourse.storageKey);
+            if (savedNext) {
+              try {
+                newLetterScoreDict = JSON.parse(savedNext) || {};
+              } catch (e) {
+                console.warn('Could not parse saved progress for next course:', e);
+                newLetterScoreDict = {};
+              }
+            }
+          }
+          // Ensure every letter in the course has an entry
           newCourse.lettersToLearn.forEach(letter => {
-            newLetterScoreDict[letter] = 0;
+            if (typeof newLetterScoreDict[letter] !== 'number') {
+              newLetterScoreDict[letter] = 0;
+            }
           });
-          console.log('Created new letter score dictionary for next course');
+          console.log('Loaded letter score dictionary for next course');
 
           // Save the current course progress before switching
           if (typeof Storage !== 'undefined') {
