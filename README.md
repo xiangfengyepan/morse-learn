@@ -1,4 +1,6 @@
 # Morse Typing Trainer
+[![CI](https://github.com/xiangfengyepan/morse-learn/actions/workflows/ci.yml/badge.svg)](https://github.com/xiangfengyepan/morse-learn/actions/workflows/ci.yml)
+
 This is a fork of the original [Google/Tania Finlayson Morse code trainer](https://github.com/googlecreativelab/morse-learn). Adapted to help people with a visual impairment - but also because many people prefer Auditory Mnemoics better than visual ones for learning morse code.
 
 Main differences:
