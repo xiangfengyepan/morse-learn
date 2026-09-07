@@ -82,8 +82,8 @@ class App {
       // Add global function to toggle one-switch mode
       window.GameApp.toggleOneSwitchMode = (enable) => {
         // Store the setting in localStorage
-        if (typeof Storage !== "undefined") {
-          localStorage.setItem("one_switch_mode", enable);
+        if (typeof Storage !== 'undefined') {
+          localStorage.setItem('one_switch_mode', enable);
         }
 
         // Update the game state if it exists
@@ -269,7 +269,7 @@ class App {
             const gameState = this.game.state.states.game;
             if (gameState) {
               const code = gameState.generateCode();
-              prompt("Here is your code:", code);
+              prompt('Here is your code:', code);
             }
           }
         });
@@ -462,7 +462,7 @@ class App {
 
       // Make sure the images are properly loaded before starting the game
       this.game.load.onLoadComplete.add(() => {
-        console.log("All assets loaded successfully");
+        console.log('All assets loaded successfully');
       });
 
       console.log('All sound files loaded');

@@ -35,7 +35,7 @@ class SoundManager {
         setTimeout(() => {
           try {
             // Create a new instance of the sound with error handling
-            const sound = this.sounds[name].play();
+            this.sounds[name].play();
 
             // Handle any errors that might occur during playback
             this.sounds[name].once('playerror', (id, err) => {

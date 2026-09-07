@@ -12,9 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const config = require("./config");
-import { morseToEnglish } from "./morse-dictionary";
-import { timePlaytime, TIMEKEY } from "./time-playtime";
+const config = require('./config');
+import { timePlaytime, TIMEKEY } from './time-playtime';
 
 const TRACKING_ALLOWED_KEY = 'isTrackingAllowed';
 
@@ -119,7 +118,7 @@ class TitleState {
             audio = true;
           }
 
-          console.log('Going to randomise your settings:', {speechAssistive, audio, visualCues})
+          console.log('Going to randomise your settings:', { speechAssistive, audio, visualCues })
           localStorage.setItem('have_speech_assistive', speechAssistive)
           localStorage.setItem('have_audio', audio)
           localStorage.setItem('have_visual_cues', visualCues)
@@ -140,7 +139,7 @@ class TitleState {
 
   setupListeners() {
     // This code is pretty flakey, there is probably a cleaner way to do this in phaser
-    const canvas = document.querySelector("canvas");
+    const canvas = document.querySelector('canvas');
 
     // If any of the settings are undefined then we default them to true
     if(getBoolFromLocalStore('have_speech_assistive') === null) {
@@ -167,13 +166,13 @@ class TitleState {
     this.have_speech_assistive = initialSpeechAssistive;
     this.have_visual_cues = initialVisualCues;
 
-    let audioToggle = document.querySelector(".audio-toggle");
-    let speechToggle = document.querySelector(".speech-toggle");
-    let visualToggle = document.querySelector(".visual-toggle");
-    let trackingToggle = document.querySelector(".consent-toggle");
-    let statsButton = document.querySelector(".stats-button");
-    let keyboardToggle = document.querySelector(".keyboard-toggle");
-    let oneSwitchToggle = document.querySelector(".one-switch-toggle");
+    let audioToggle = document.querySelector('.audio-toggle');
+    let speechToggle = document.querySelector('.speech-toggle');
+    let visualToggle = document.querySelector('.visual-toggle');
+    let trackingToggle = document.querySelector('.consent-toggle');
+    let statsButton = document.querySelector('.stats-button');
+    let keyboardToggle = document.querySelector('.keyboard-toggle');
+    let oneSwitchToggle = document.querySelector('.one-switch-toggle');
 
     // Make the display match the initial state - check if elements exist first
     if (audioToggle) audioToggle.classList.add(initialAudio ? 'noop' : 'disabled');
@@ -206,9 +205,9 @@ class TitleState {
       timePlaytime();
 
       // Remove event listeners to prevent multiple starts
-      document.removeEventListener("keydown", handleKeyDown);
-      canvas.removeEventListener("click", handleCanvasClick);
-      document.removeEventListener("touchstart", handleTouchStart);
+      document.removeEventListener('keydown', handleKeyDown);
+      canvas.removeEventListener('click', handleCanvasClick);
+      document.removeEventListener('touchstart', handleTouchStart);
     };
 
     // Event handlers for different input methods
@@ -227,18 +226,18 @@ class TitleState {
     };
 
     // Add event listeners for different input methods
-    document.addEventListener("keydown", handleKeyDown);
-    canvas.addEventListener("click", handleCanvasClick);
+    document.addEventListener('keydown', handleKeyDown);
+    canvas.addEventListener('click', handleCanvasClick);
 
     // Add touch event for mobile devices
     if (config.GLOBALS.isTouch) {
-      document.addEventListener("touchstart", handleTouchStart);
+      document.addEventListener('touchstart', handleTouchStart);
     }
     let updateAudioToggles = () => {
-      audioToggle.classList[this.have_audio ? "remove" : "add"]("disabled");
+      audioToggle.classList[this.have_audio ? 'remove' : 'add']('disabled');
       speechToggle.classList[
-        this.have_audio && this.have_speech_assistive ? "remove" : "add"
-      ]("disabled");
+        this.have_audio && this.have_speech_assistive ? 'remove' : 'add'
+      ]('disabled');
 
       // If we turn sound off we should also turn speech have_speech_assistive off
       if(!this.game.have_audio) {
@@ -264,8 +263,8 @@ class TitleState {
       updateAudioToggles();
     };
     updateAudioToggles();
-    audioToggle.addEventListener("click", onSoundToggle, true);
-    speechToggle.addEventListener("click", onSpeechToggle, true);
+    audioToggle.addEventListener('click', onSoundToggle, true);
+    speechToggle.addEventListener('click', onSpeechToggle, true);
 
     // This toggle allows the user to enable or disable visual cues.
     const onVisualToggle = (e) => {
@@ -275,9 +274,9 @@ class TitleState {
       e.stopPropagation();
       this.have_visual_cues = !this.have_visual_cues;
       this.game.have_visual_cues = this.have_visual_cues;
-      const action = this.have_visual_cues ? "remove" : "add";
+      const action = this.have_visual_cues ? 'remove' : 'add';
       localStorage.setItem('have_visual_cues', this.have_visual_cues);
-      visualToggle.classList[action]("disabled");
+      visualToggle.classList[action]('disabled');
       console.log('Visual cues toggled:', this.have_visual_cues);
 
       // Force update of current game state if game has started
@@ -299,7 +298,7 @@ class TitleState {
         }
       }
     };
-    visualToggle.addEventListener("click", onVisualToggle, true);
+    visualToggle.addEventListener('click', onVisualToggle, true);
 
     const onTrackingToggle = (e) => {
       e.preventDefault();
@@ -307,13 +306,13 @@ class TitleState {
 
       const current = getBoolFromLocalStore(TRACKING_ALLOWED_KEY)
       const newValue = !current
-      const action = newValue ? "remove" : "add";
+      const action = newValue ? 'remove' : 'add';
       localStorage.setItem(TRACKING_ALLOWED_KEY, newValue)
-      trackingToggle.classList[action]("disabled");
+      trackingToggle.classList[action]('disabled');
     }
-    trackingToggle.addEventListener("click", onTrackingToggle, true);
+    trackingToggle.addEventListener('click', onTrackingToggle, true);
 
-    const resetButton = document.querySelector(".reset-button");
+    const resetButton = document.querySelector('.reset-button');
     const onReset = (e) => {
       e.preventDefault();
       e.stopPropagation();
@@ -350,7 +349,7 @@ class TitleState {
       localStorage.setItem('morseboard_hidden', newState);
 
       // Update toggle button appearance
-      keyboardToggle.classList[newState ? "add" : "remove"]("disabled");
+      keyboardToggle.classList[newState ? 'add' : 'remove']('disabled');
 
       // If we're in the game state, update the morse board visibility
       if (this.hasStarted && this.game.state.current === 'game') {
@@ -397,10 +396,10 @@ class TitleState {
       e.preventDefault();
       e.stopPropagation();
 
-      console.log("One-switch toggle clicked");
+      console.log('One-switch toggle clicked');
 
       // Get the current one-switch mode state
-      const currentMode = localStorage.getItem("one_switch_mode") === "true";
+      const currentMode = localStorage.getItem('one_switch_mode') === 'true';
       const newMode = !currentMode;
 
       // Use the global function to toggle one-switch mode
@@ -411,12 +410,12 @@ class TitleState {
       if (icon) {
         icon.className = newMode ? 'fa fa-2x fa-toggle-on' : 'fa fa-2x fa-toggle-off';
       }
-      oneSwitchToggle.classList[newMode ? "remove" : "add"]("disabled");
+      oneSwitchToggle.classList[newMode ? 'remove' : 'add']('disabled');
 
       // If we're not in game state, show a message but still save the preference
       if (!success && this.game.state.current !== 'game') {
-        console.log("Not in game state, preference saved but not applied yet");
-        alert("One-switch mode preference saved. It will be applied when you start the game.");
+        console.log('Not in game state, preference saved but not applied yet');
+        alert('One-switch mode preference saved. It will be applied when you start the game.');
       }
     };
 
@@ -432,9 +431,9 @@ class TitleState {
       if (icon) {
         icon.className = 'fa fa-2x fa-toggle-on';
       }
-      oneSwitchToggle.classList.remove("disabled");
+      oneSwitchToggle.classList.remove('disabled');
     } else if (oneSwitchToggle) {
-      oneSwitchToggle.classList.add("disabled");
+      oneSwitchToggle.classList.add('disabled');
     }
 
     oneSwitchToggle.addEventListener('click', onOneSwitchToggle, true);
@@ -530,9 +529,9 @@ class TitleState {
       }
 
       // Also update the original toggle for compatibility
-      const audioToggle = document.querySelector(".audio-toggle");
+      const audioToggle = document.querySelector('.audio-toggle');
       if (audioToggle) {
-        audioToggle.classList[newState ? "remove" : "add"]("disabled");
+        audioToggle.classList[newState ? 'remove' : 'add']('disabled');
       }
     });
 
@@ -547,9 +546,9 @@ class TitleState {
       this.updateToggleState(speechToggle, newState);
 
       // Also update the original toggle for compatibility
-      const originalSpeechToggle = document.querySelector(".speech-toggle");
+      const originalSpeechToggle = document.querySelector('.speech-toggle');
       if (originalSpeechToggle) {
-        originalSpeechToggle.classList[newState ? "remove" : "add"]("disabled");
+        originalSpeechToggle.classList[newState ? 'remove' : 'add']('disabled');
       }
     });
 
@@ -561,9 +560,9 @@ class TitleState {
       this.updateToggleState(visualToggle, newState);
 
       // Also update the original toggle for compatibility
-      const originalVisualToggle = document.querySelector(".visual-toggle");
+      const originalVisualToggle = document.querySelector('.visual-toggle');
       if (originalVisualToggle) {
-        originalVisualToggle.classList[newState ? "remove" : "add"]("disabled");
+        originalVisualToggle.classList[newState ? 'remove' : 'add']('disabled');
       }
 
       // Force update of current game state if game has started
@@ -598,9 +597,9 @@ class TitleState {
       this.updateToggleState(keyboardToggleNew, !newState);
 
       // Also update the original toggle for compatibility
-      const keyboardToggle = document.querySelector(".keyboard-toggle");
+      const keyboardToggle = document.querySelector('.keyboard-toggle');
       if (keyboardToggle) {
-        keyboardToggle.classList[newState ? "add" : "remove"]("disabled");
+        keyboardToggle.classList[newState ? 'add' : 'remove']('disabled');
       }
 
       // If we're in the game state, update the morse board visibility
@@ -632,7 +631,7 @@ class TitleState {
 
     oneSwitchToggleNew.addEventListener('click', () => {
       // Get the current one-switch mode state
-      const currentMode = localStorage.getItem("one_switch_mode") === "true";
+      const currentMode = localStorage.getItem('one_switch_mode') === 'true';
       const newState = !currentMode;
 
       // Use the global function to toggle one-switch mode
@@ -642,19 +641,19 @@ class TitleState {
       this.updateToggleState(oneSwitchToggleNew, newState);
 
       // Also update the original toggle for compatibility
-      const oneSwitchToggle = document.querySelector(".one-switch-toggle");
+      const oneSwitchToggle = document.querySelector('.one-switch-toggle');
       if (oneSwitchToggle) {
         const icon = oneSwitchToggle.querySelector('i');
         if (icon) {
           icon.className = newState ? 'fa fa-2x fa-toggle-on' : 'fa fa-2x fa-toggle-off';
         }
-        oneSwitchToggle.classList[newState ? "remove" : "add"]("disabled");
+        oneSwitchToggle.classList[newState ? 'remove' : 'add']('disabled');
       }
 
       // If we're not in game state, show a message but still save the preference
       if (!success && this.game.state.current !== 'game') {
-        console.log("Not in game state, preference saved but not applied yet");
-        alert("One-switch mode preference saved. It will be applied when you start the game.");
+        console.log('Not in game state, preference saved but not applied yet');
+        alert('One-switch mode preference saved. It will be applied when you start the game.');
       }
     });
 
@@ -665,9 +664,9 @@ class TitleState {
       this.updateToggleState(consentToggleNew, newState);
 
       // Also update the original toggle for compatibility
-      const trackingToggle = document.querySelector(".consent-toggle");
+      const trackingToggle = document.querySelector('.consent-toggle');
       if (trackingToggle) {
-        trackingToggle.classList[newState ? "remove" : "add"]("disabled");
+        trackingToggle.classList[newState ? 'remove' : 'add']('disabled');
       }
     });
 
@@ -836,7 +835,7 @@ class TitleState {
     // Check if game should restart if resetting progress
     if (params && params.reset) {
       this.hasStarted = false;
-      document.getElementById("button").style.display = "block";
+      document.getElementById('button').style.display = 'block';
       this.game.state.restart();
     }
   }
@@ -893,7 +892,7 @@ class TitleState {
   // Load letters from localStorage if it exists
   loadLetters() {
     return new Promise((resolve) => {
-      if (typeof Storage !== "undefined") {
+      if (typeof Storage !== 'undefined') {
         if (localStorage[this.course.storageKey]) {
           const saved = JSON.parse(
             localStorage.getItem(this.course.storageKey)
@@ -938,35 +937,35 @@ class TitleState {
 
   // Draws all the titles
   createTitles() {
-    const titleText = "Morse\nTyping\nTrainer";
+    const titleText = 'Morse\nTyping\nTrainer';
     let title = this.game.add.text(
       this.game.world.centerX,
       this.game.world.centerY +
         (config.title.titleOffset),
       titleText,
       {
-        align: "center",
+        align: 'center',
       }
     );
     title.lineSpacing = -10;
-    title.fill = "#F1E4D4";
+    title.fill = '#F1E4D4';
     title.fontSize = config.title.mainFontSize;
     title.anchor.setTo(0.5);
     title.font = config.typography.font;
 
     const startText = config.GLOBALS.isTouch
-      ? "Tap to Start"
-      : "Press any button to Start";
+      ? 'Tap to Start'
+      : 'Press any button to Start';
     let startButton = this.game.add.text(
       this.game.world.centerX,
       this.game.world.centerY + config.title.startButtonOffset,
       startText,
       {
-        align: "center",
+        align: 'center',
       }
     );
     startButton.fontSize = config.title.startButtonSize;
-    startButton.fill = "#F1E4D4";
+    startButton.fill = '#F1E4D4';
     startButton.anchor.setTo(0.5);
     startButton.font = config.typography.font;
 
@@ -986,7 +985,7 @@ class TitleState {
     // Pulsing animation for start button
     const startButtonTween = this.game.add
       .tween(startButton)
-      .to({ alpha: 0.4 }, 600, "Linear", true, 0, -1);
+      .to({ alpha: 0.4 }, 600, 'Linear', true, 0, -1);
     startButtonTween.yoyo(true, 0);
   }
 
@@ -996,7 +995,7 @@ class TitleState {
 
 
     return new Promise((resolve) => {
-      if (typeof Storage !== "undefined") {
+      if (typeof Storage !== 'undefined') {
         resolve(getBoolFromLocalStore('intro'))
       }
     });
@@ -1014,9 +1013,9 @@ class TitleState {
           console.log('Has viewed intro:', hasViewedIntro);
 
           // Hide the start button
-          const button = document.getElementById("button");
+          const button = document.getElementById('button');
           if (button) {
-            button.style.display = "none";
+            button.style.display = 'none';
           } else {
             console.error('Button element not found');
           }
@@ -1029,11 +1028,11 @@ class TitleState {
           console.log('Starting game state...');
 
           // Start the appropriate game state
-          const nextState = hasViewedIntro ? "game" : "intro";
+          const nextState = hasViewedIntro ? 'game' : 'intro';
           console.log('Next state:', nextState);
 
           // Initialize the course before starting the game state
-          if (nextState === "game" && !this.game.course) {
+          if (nextState === 'game' && !this.game.course) {
             console.log('Initializing course');
             this.game.course = {
               lettersToLearn: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
@@ -1218,112 +1217,112 @@ class TitleState {
   }
 }
 
-const EMPTY_PROGRESS = {"e":0,"t":0,"a":0,"i":0,"m":0,"s":0,"o":0,"h":0,"n":0,"c":0,"r":0,"d":0,"u":0,"k":0,"l":0,"f":0,"b":0,"p":0,"g":0,"j":0,"v":0,"q":0,"w":0,"x":0,"y":0,"z":0}
+const EMPTY_PROGRESS = { 'e': 0,'t': 0,'a': 0,'i': 0,'m': 0,'s': 0,'o': 0,'h': 0,'n': 0,'c': 0,'r': 0,'d': 0,'u': 0,'k': 0,'l': 0,'f': 0,'b': 0,'p': 0,'g': 0,'j': 0,'v': 0,'q': 0,'w': 0,'x': 0,'y': 0,'z': 0 }
 // The default for the analytics
 const EMPTY_ANALYTICS = {
-  "e": {
-      "wrong": 0,
-      "correct": 0
+  'e': {
+    'wrong': 0,
+    'correct': 0
   },
-  "t": {
-      "wrong": 0,
-      "correct": 0
+  't': {
+    'wrong': 0,
+    'correct': 0
   },
-  "a": {
-      "wrong": 0,
-      "correct": 0
+  'a': {
+    'wrong': 0,
+    'correct': 0
   },
-  "i": {
-      "wrong": 0,
-      "correct": 0
+  'i': {
+    'wrong': 0,
+    'correct': 0
   },
-  "m": {
-      "wrong": 0,
-      "correct": 0
+  'm': {
+    'wrong': 0,
+    'correct': 0
   },
-  "s": {
-      "wrong": 0,
-      "correct": 0
+  's': {
+    'wrong': 0,
+    'correct': 0
   },
-  "o": {
-      "wrong": 0,
-      "correct": 0
+  'o': {
+    'wrong': 0,
+    'correct': 0
   },
-  "h": {
-      "wrong": 0,
-      "correct": 0
+  'h': {
+    'wrong': 0,
+    'correct': 0
   },
-  "n": {
-      "wrong": 0,
-      "correct": 0
+  'n': {
+    'wrong': 0,
+    'correct': 0
   },
-  "c": {
-      "wrong": 0,
-      "correct": 0
+  'c': {
+    'wrong': 0,
+    'correct': 0
   },
-  "r": {
-      "wrong": 0,
-      "correct": 0
+  'r': {
+    'wrong': 0,
+    'correct': 0
   },
-  "d": {
-      "wrong": 0,
-      "correct": 0
+  'd': {
+    'wrong': 0,
+    'correct': 0
   },
-  "u": {
-      "wrong": 0,
-      "correct": 0
+  'u': {
+    'wrong': 0,
+    'correct': 0
   },
-  "k": {
-      "wrong": 0,
-      "correct": 0
+  'k': {
+    'wrong': 0,
+    'correct': 0
   },
-  "l": {
-      "wrong": 0,
-      "correct": 0
+  'l': {
+    'wrong': 0,
+    'correct': 0
   },
-  "f": {
-      "wrong": 0,
-      "correct": 0
+  'f': {
+    'wrong': 0,
+    'correct': 0
   },
-  "b": {
-      "wrong": 0,
-      "correct": 0
+  'b': {
+    'wrong': 0,
+    'correct': 0
   },
-  "p": {
-      "wrong": 0,
-      "correct": 0
+  'p': {
+    'wrong': 0,
+    'correct': 0
   },
-  "g": {
-      "wrong": 0,
-      "correct": 0
+  'g': {
+    'wrong': 0,
+    'correct': 0
   },
-  "j": {
-      "wrong": 0,
-      "correct": 0
+  'j': {
+    'wrong': 0,
+    'correct': 0
   },
-  "v": {
-      "wrong": 0,
-      "correct": 0
+  'v': {
+    'wrong': 0,
+    'correct': 0
   },
-  "q": {
-      "wrong": 0,
-      "correct": 0
+  'q': {
+    'wrong': 0,
+    'correct': 0
   },
-  "w": {
-      "wrong": 0,
-      "correct": 0
+  'w': {
+    'wrong': 0,
+    'correct': 0
   },
-  "x": {
-      "wrong": 0,
-      "correct": 0
+  'x': {
+    'wrong': 0,
+    'correct': 0
   },
-  "y": {
-      "wrong": 0,
-      "correct": 0
+  'y': {
+    'wrong': 0,
+    'correct': 0
   },
-  "z": {
-      "wrong": 0,
-      "correct": 0
+  'z': {
+    'wrong': 0,
+    'correct': 0
   }
 }
 

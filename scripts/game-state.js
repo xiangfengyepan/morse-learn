@@ -19,7 +19,7 @@ import { englishToMorse, morseToEnglish } from './morse-dictionary';
 class GameState {
 
   constructor(game, course) {
-   	this.course = course;
+    this.course = course;
     this.letterScoreDict = {};
     this.morseDictionary = englishToMorse;
     this.morseToEnglish = morseToEnglish
