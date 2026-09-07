@@ -110,7 +110,7 @@ const config = {
       name: 'Keyboard Keys',
       headerSpacing: 5,
       storageKey: 'savedKeyboardLetters',
-      letters: {'⎋':'esc','⌦':'del','↦':'tab'},
+      letters: { '⎋': 'esc','⌦': 'del','↦': 'tab' },
       words: ['⎋⎋↦', '⎋↦⎋', '⌦⌦⌦'],
       assets: 'keyboard'
     }

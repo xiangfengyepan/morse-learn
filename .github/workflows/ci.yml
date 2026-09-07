@@ -60,11 +60,6 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
-    # Advisory for now: `npm run eslint` reports 136 pre-existing errors in
-    # scripts/ (mostly `quotes`, plus two parse errors from ecmaVersion 6 in
-    # .eslintrc.json). The repo also ships lint disabled in its precommit hook.
-    # Once that backlog is cleared, delete this line to make lint blocking.
-    continue-on-error: true
     steps:
       - name: Checkout
         uses: actions/checkout@v4

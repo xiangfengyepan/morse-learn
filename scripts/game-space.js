@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Word } from "./word";
+import { Word } from './word';
 import { MorseBoard } from './morse-board'
-let _ = require("lodash");
-const config = require("./config");
+let _ = require('lodash');
+const config = require('./config');
 // Create our own delay function using setTimeout
 function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -204,8 +204,8 @@ class GameSpace {
       console.log('Letters loaded');
 
       // Check for saved one-switch mode preference
-      const oneSwitchMode = typeof Storage !== "undefined" ?
-        localStorage.getItem("one_switch_mode") === "true" : false;
+      const oneSwitchMode = typeof Storage !== 'undefined' ?
+        localStorage.getItem('one_switch_mode') === 'true' : false;
       console.log('One-switch mode:', oneSwitchMode);
 
       // Check if window.GameApp and assetPaths exist
@@ -222,10 +222,10 @@ class GameSpace {
         debounce: 2e3,
         dashSoundPath: dashSoundPath,
         dotSoundPath: dotSoundPath,
-        notificationStyle: "output",
+        notificationStyle: 'output',
         game: this.game,
         onCommit: (e) =>  {
-          this.checkMatch(e.letter ? e.letter : "");
+          this.checkMatch(e.letter ? e.letter : '');
         },
         // Initialize one-switch mode from saved preference
         oneSwitchMode: oneSwitchMode,
@@ -323,7 +323,7 @@ class GameSpace {
         word.pushUp(0);
 
         if (word.letterObjects && word.letterObjects[0]) {
-          word.letterObjects[0].addColor("#F1E4D4", 0);
+          word.letterObjects[0].addColor('#F1E4D4', 0);
           word.letterObjects[0].alpha = 1;
         }
 
@@ -685,7 +685,7 @@ class GameSpace {
   async playLetter(letter) {
     let name = this.parent.course.getLetterName(letter);
     if (this.game.have_speech_assistive) {
-      const soundName = "letter-" + name;
+      const soundName = 'letter-' + name;
       this.game.customSoundManager.playSound(soundName)
       let timeout = this.game.customSoundManager.soundDuration(soundName)
       await delay(timeout > 0 ? timeout * 1000 : 200);
@@ -705,7 +705,7 @@ class GameSpace {
     let name = this.parent.course.getLetterName(letter.letter);
     if (this.game.have_speech_assistive) {
       await delay(300);
-      const soundName = "soundalike-letter-" + name;
+      const soundName = 'soundalike-letter-' + name;
       this.game.customSoundManager.playSound(soundName)
       let timeout = this.game.customSoundManager.soundDuration(soundName)
       await delay(timeout > 0 ? timeout * 1000 : 200);
@@ -725,12 +725,12 @@ class GameSpace {
     }
     for (let i = 0; i < letter.morse.length; i++) {
       let tmp;
-      if (letter.morse[i] === "\u002D") {
+      if (letter.morse[i] === '\u002D') {
         tmp = {
           totalDuration: this.game.customSoundManager.soundDuration('dash')
         }
         this.game.customSoundManager.playSound('dash')
-      } else if (letter.morse[i] === "\u002E") {
+      } else if (letter.morse[i] === '\u002E') {
         tmp = {
           totalDuration: this.game.customSoundManager.soundDuration('period')
         }
@@ -744,8 +744,8 @@ class GameSpace {
   }
 
   setWatchedVideo() {
-    if (typeof Storage !== "undefined") {
-      localStorage.setItem("intro", true);
+    if (typeof Storage !== 'undefined') {
+      localStorage.setItem('intro', true);
     }
   }
 
@@ -764,7 +764,6 @@ class GameSpace {
           const letter = this.currentWords[w].letterObjects[l];
           const letterX = letter.position.x;
           const hint = this.currentWords[w].hints[l];
-          const hintX = hint.text.x;
           const pill = this.currentWords[w].pills[l];
           const pillX = pill.position.x;
 
@@ -936,109 +935,109 @@ class GameSpace {
 
 // The default for the analytics
 const EMPTY_ANALYTICS = {
-  "e": {
-      "wrong": 0,
-      "correct": 0
+  'e': {
+    'wrong': 0,
+    'correct': 0
   },
-  "t": {
-      "wrong": 0,
-      "correct": 0
+  't': {
+    'wrong': 0,
+    'correct': 0
   },
-  "a": {
-      "wrong": 0,
-      "correct": 0
+  'a': {
+    'wrong': 0,
+    'correct': 0
   },
-  "i": {
-      "wrong": 0,
-      "correct": 0
+  'i': {
+    'wrong': 0,
+    'correct': 0
   },
-  "m": {
-      "wrong": 0,
-      "correct": 0
+  'm': {
+    'wrong': 0,
+    'correct': 0
   },
-  "s": {
-      "wrong": 0,
-      "correct": 0
+  's': {
+    'wrong': 0,
+    'correct': 0
   },
-  "o": {
-      "wrong": 0,
-      "correct": 0
+  'o': {
+    'wrong': 0,
+    'correct': 0
   },
-  "h": {
-      "wrong": 0,
-      "correct": 0
+  'h': {
+    'wrong': 0,
+    'correct': 0
   },
-  "n": {
-      "wrong": 0,
-      "correct": 0
+  'n': {
+    'wrong': 0,
+    'correct': 0
   },
-  "c": {
-      "wrong": 0,
-      "correct": 0
+  'c': {
+    'wrong': 0,
+    'correct': 0
   },
-  "r": {
-      "wrong": 0,
-      "correct": 0
+  'r': {
+    'wrong': 0,
+    'correct': 0
   },
-  "d": {
-      "wrong": 0,
-      "correct": 0
+  'd': {
+    'wrong': 0,
+    'correct': 0
   },
-  "u": {
-      "wrong": 0,
-      "correct": 0
+  'u': {
+    'wrong': 0,
+    'correct': 0
   },
-  "k": {
-      "wrong": 0,
-      "correct": 0
+  'k': {
+    'wrong': 0,
+    'correct': 0
   },
-  "l": {
-      "wrong": 0,
-      "correct": 0
+  'l': {
+    'wrong': 0,
+    'correct': 0
   },
-  "f": {
-      "wrong": 0,
-      "correct": 0
+  'f': {
+    'wrong': 0,
+    'correct': 0
   },
-  "b": {
-      "wrong": 0,
-      "correct": 0
+  'b': {
+    'wrong': 0,
+    'correct': 0
   },
-  "p": {
-      "wrong": 0,
-      "correct": 0
+  'p': {
+    'wrong': 0,
+    'correct': 0
   },
-  "g": {
-      "wrong": 0,
-      "correct": 0
+  'g': {
+    'wrong': 0,
+    'correct': 0
   },
-  "j": {
-      "wrong": 0,
-      "correct": 0
+  'j': {
+    'wrong': 0,
+    'correct': 0
   },
-  "v": {
-      "wrong": 0,
-      "correct": 0
+  'v': {
+    'wrong': 0,
+    'correct': 0
   },
-  "q": {
-      "wrong": 0,
-      "correct": 0
+  'q': {
+    'wrong': 0,
+    'correct': 0
   },
-  "w": {
-      "wrong": 0,
-      "correct": 0
+  'w': {
+    'wrong': 0,
+    'correct': 0
   },
-  "x": {
-      "wrong": 0,
-      "correct": 0
+  'x': {
+    'wrong': 0,
+    'correct': 0
   },
-  "y": {
-      "wrong": 0,
-      "correct": 0
+  'y': {
+    'wrong': 0,
+    'correct': 0
   },
-  "z": {
-      "wrong": 0,
-      "correct": 0
+  'z': {
+    'wrong': 0,
+    'correct': 0
   }
 }
 

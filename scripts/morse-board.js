@@ -1,4 +1,4 @@
-import { morseToEnglish } from "./morse-dictionary";
+import { morseToEnglish } from './morse-dictionary';
 
 class MorseBoard {
   safePlayAudio(audioEl, label) {
@@ -23,15 +23,15 @@ class MorseBoard {
     this.morseDictionary = morseToEnglish;
 
     // Check for saved one-switch mode preference
-    if (typeof Storage !== "undefined" && options.loadPreferences !== false) {
-      const savedOneSwitchMode = localStorage.getItem("one_switch_mode");
+    if (typeof Storage !== 'undefined' && options.loadPreferences !== false) {
+      const savedOneSwitchMode = localStorage.getItem('one_switch_mode');
       if (savedOneSwitchMode !== null) {
-        options.oneSwitchMode = savedOneSwitchMode === "true";
+        options.oneSwitchMode = savedOneSwitchMode === 'true';
       }
 
       // Auto-commit delay in ms (0 = manual: commit only with the space bar)
-      const savedAutoCommitMs = localStorage.getItem("auto_commit_ms");
-      if (savedAutoCommitMs !== null && savedAutoCommitMs !== "") {
+      const savedAutoCommitMs = localStorage.getItem('auto_commit_ms');
+      if (savedAutoCommitMs !== null && savedAutoCommitMs !== '') {
         const ms = parseInt(savedAutoCommitMs, 10);
         if (!isNaN(ms)) {
           options.debounce = ms;
@@ -45,9 +45,9 @@ class MorseBoard {
     // optional custom key (one extra key per button, set in Settings).
     this.baseDotKeyMap = this.config.dotKeyMap.slice();
     this.baseDashKeyMap = this.config.dashKeyMap.slice();
-    if (typeof Storage !== "undefined" && options.loadPreferences !== false) {
-      const customDot = parseInt(localStorage.getItem("custom_dot_key"), 10);
-      const customDash = parseInt(localStorage.getItem("custom_dash_key"), 10);
+    if (typeof Storage !== 'undefined' && options.loadPreferences !== false) {
+      const customDot = parseInt(localStorage.getItem('custom_dot_key'), 10);
+      const customDash = parseInt(localStorage.getItem('custom_dash_key'), 10);
       this.applyCustomKeys(
         isNaN(customDot) ? null : customDot,
         isNaN(customDash) ? null : customDash
@@ -79,7 +79,7 @@ class MorseBoard {
         75, // k
         13, // enter
       ],
-      dashSoundPath: "../assets/sounds/dash.mp3",
+      dashSoundPath: '../assets/sounds/dash.mp3',
       dotKeyMap: [
         190, // .
         74, // j
@@ -92,11 +92,11 @@ class MorseBoard {
         46, // delete
         73 // i
       ],
-      dotSoundPath: "../assets/sounds/dot.mp3",
-      height: "25vh",
+      dotSoundPath: '../assets/sounds/dot.mp3',
+      height: '25vh',
       notification: true,
       notificationDuration: 1e3,
-      notificationStyle: "overlay",
+      notificationStyle: 'overlay',
       output: true,
       sounds: true,
       onCommit: function onCommit() {},
@@ -113,9 +113,9 @@ class MorseBoard {
   }
 
   create() {
-    this.background = document.getElementById("morseboard");
+    this.background = document.getElementById('morseboard');
     if (!this.background) {
-      console.error("Morse board element not found");
+      console.error('Morse board element not found');
       return;
     }
 
@@ -123,61 +123,61 @@ class MorseBoard {
     // This prevents the morse board from blocking clicks on the title screen
     this.background.style.height = this.config.height;
 
-    this.output = document.getElementById("output");
+    this.output = document.getElementById('output');
     if (!this.output) {
-      console.error("Morse board output element not found");
+      console.error('Morse board output element not found');
       return;
     }
 
     this.output.style.bottom = this.config.height;
-    this.output.style.visibility = this.config.output ? "visible" : "hidden";
-    this.output.style.pointerEvents = this.config.output ? "auto" : "none";
-    this.output.setAttribute("readonly", "true");
-    this.output.setAttribute("tabindex", "-1");
+    this.output.style.visibility = this.config.output ? 'visible' : 'hidden';
+    this.output.style.pointerEvents = this.config.output ? 'auto' : 'none';
+    this.output.setAttribute('readonly', 'true');
+    this.output.setAttribute('tabindex', '-1');
 
-    this.buttonBox = document.getElementById("button-box");
+    this.buttonBox = document.getElementById('button-box');
     if (!this.buttonBox) {
-      console.error("Morse board button box not found");
+      console.error('Morse board button box not found');
       return;
     }
 
-    this.dotButton = document.getElementById("dot");
+    this.dotButton = document.getElementById('dot');
     if (!this.dotButton) {
-      console.error("Morse board dot button not found");
+      console.error('Morse board dot button not found');
       return;
     }
-    this.dotButton.setAttribute("tabindex", "0");
+    this.dotButton.setAttribute('tabindex', '0');
 
-    this.dashButton = document.getElementById("dash");
+    this.dashButton = document.getElementById('dash');
     if (!this.dashButton) {
-      console.error("Morse board dash button not found");
+      console.error('Morse board dash button not found');
       return;
     }
-    this.dashButton.setAttribute("tabindex", "0");
+    this.dashButton.setAttribute('tabindex', '0');
 
     // Initialize one-switch mode variables
     this.switchPressStartTime = 0;
     this.oneSwitchKeyPressed = false;
-    this.progressIndicator = document.getElementById("one-switch-progress");
+    this.progressIndicator = document.getElementById('one-switch-progress');
     this.progressAnimationFrame = null;
 
     if (this.config.sounds && !this.detectIE()) {
-      this.dotAudio = document.createElement("audio");
-      var dotSource = document.createElement("source");
-      dotSource.setAttribute("src", this.config.dotSoundPath);
-      dotSource.setAttribute("type", "audio/mp3");
-      this.dotAudio.id = "dotSound";
-      this.dotAudio.style.position = "absolute";
-      this.dotAudio.style.visibility = "hidden";
+      this.dotAudio = document.createElement('audio');
+      var dotSource = document.createElement('source');
+      dotSource.setAttribute('src', this.config.dotSoundPath);
+      dotSource.setAttribute('type', 'audio/mp3');
+      this.dotAudio.id = 'dotSound';
+      this.dotAudio.style.position = 'absolute';
+      this.dotAudio.style.visibility = 'hidden';
       this.dotAudio.appendChild(dotSource);
       document.body.appendChild(this.dotAudio);
-      this.dashAudio = document.createElement("audio");
-      var dashSource = document.createElement("source");
-      dashSource.setAttribute("src", this.config.dashSoundPath);
-      dashSource.setAttribute("type", "audio/mp3");
-      this.dashAudio.id = "dashSound";
-      this.dashAudio.style.position = "absolute";
-      this.dashAudio.style.visibility = "hidden";
+      this.dashAudio = document.createElement('audio');
+      var dashSource = document.createElement('source');
+      dashSource.setAttribute('src', this.config.dashSoundPath);
+      dashSource.setAttribute('type', 'audio/mp3');
+      this.dashAudio.id = 'dashSound';
+      this.dashAudio.style.position = 'absolute';
+      this.dashAudio.style.visibility = 'hidden';
       this.dashAudio.appendChild(dashSource);
       document.body.appendChild(this.dashAudio);
     }
@@ -188,17 +188,17 @@ class MorseBoard {
     this.boundOnClick = this.onClick.bind(this);
     this.boundCommit = this.commit.bind(this);
 
-    window.addEventListener("keydown", this.boundOnKeydown, false);
+    window.addEventListener('keydown', this.boundOnKeydown, false);
 
     // Add keyup event listener for one-switch mode
     if (this.config.oneSwitchMode) {
-      window.addEventListener("keyup", this.boundOnKeyup, false);
+      window.addEventListener('keyup', this.boundOnKeyup, false);
     }
 
-    this.dotButton.addEventListener("click", this.boundOnClick, false);
-    this.dashButton.addEventListener("click", this.boundOnClick, false);
+    this.dotButton.addEventListener('click', this.boundOnClick, false);
+    this.dashButton.addEventListener('click', this.boundOnClick, false);
 
-    this.output.addEventListener("commit", this.boundCommit, false);
+    this.output.addEventListener('commit', this.boundCommit, false);
 
     // Update keyboard hint based on mode
     this.updateKeyboardHint();
@@ -255,7 +255,7 @@ class MorseBoard {
 
     // Reset progress indicator
     if (this.progressIndicator) {
-      this.progressIndicator.style.width = "0%";
+      this.progressIndicator.style.width = '0%';
 
       // Start the animation loop
       const startTime = this.switchPressStartTime;
@@ -268,13 +268,13 @@ class MorseBoard {
         const progress = Math.min(100, (elapsed / threshold) * 100);
 
         // Update the progress bar width
-        this.progressIndicator.style.width = progress + "%";
+        this.progressIndicator.style.width = progress + '%';
 
         // Change color when crossing the threshold
         if (progress >= 100) {
-          this.progressIndicator.style.backgroundColor = "#ef4136"; // Red for dash
+          this.progressIndicator.style.backgroundColor = '#ef4136'; // Red for dash
         } else {
-          this.progressIndicator.style.backgroundColor = "#00a651"; // Green for dot
+          this.progressIndicator.style.backgroundColor = '#00a651'; // Green for dot
         }
 
         // Continue animation
@@ -303,7 +303,7 @@ class MorseBoard {
         // Reset progress indicator with a small delay to show the final state
         setTimeout(() => {
           if (this.progressIndicator) {
-            this.progressIndicator.style.width = "0%";
+            this.progressIndicator.style.width = '0%';
           }
         }, 300);
 
@@ -335,7 +335,7 @@ class MorseBoard {
 
       if (this.config.autoCommit) {
         this.output.dispatchEvent(
-          new CustomEvent("commit", {
+          new CustomEvent('commit', {
             detail: eventDetail,
           })
         );
@@ -351,7 +351,7 @@ class MorseBoard {
 
   onClick(e) {
     if (!e || !e.target) {
-      console.error("Invalid click event or target");
+      console.error('Invalid click event or target');
       return;
     }
 
@@ -364,41 +364,41 @@ class MorseBoard {
       }
     }
 
-    if (this.config.notificationStyle === "output" && this.output) {
+    if (this.config.notificationStyle === 'output' && this.output) {
       if (this.outputStyleTimeout) {
-        this.output.style.color = "#231F20";
+        this.output.style.color = '#231F20';
         clearTimeout(this.outputStyleTimeout);
         clearTimeout(this.outputStyleHideTimeout);
         this.outputStyleHideTimeout = null;
         this.outputStyleTimeout = null;
-        this.output.value = "";
+        this.output.value = '';
       }
     }
 
     var button = e.target.id;
-    if (button === "dot" && this.output) {
-      this.output.value += ".";
+    if (button === 'dot' && this.output) {
+      this.output.value += '.';
       if (this.config.sounds && !this.detectIE() && this.game && this.game.have_audio && this.dotAudio) {
         this.safePlayAudio(this.dotAudio, 'dot');
       }
-    } else if (button === "dash" && this.output) {
-      this.output.value += "-";
+    } else if (button === 'dash' && this.output) {
+      this.output.value += '-';
       if (this.config.sounds && !this.detectIE() && this.game && this.game.have_audio && this.dashAudio) {
         this.safePlayAudio(this.dashAudio, 'dash');
       }
     }
     if (e && e.target) {
-      e.target.style.boxShadow = "0px 2px 0px #A1A2A2";
-      e.target.style.background = "#F7F7F7";
-      e.target.style.color = "#000"; // Ensure text is visible in all modes
-      e.target.style.border = "1px solid rgba(0, 0, 0, 0.1)"; // Add border for visibility
+      e.target.style.boxShadow = '0px 2px 0px #A1A2A2';
+      e.target.style.background = '#F7F7F7';
+      e.target.style.color = '#000'; // Ensure text is visible in all modes
+      e.target.style.border = '1px solid rgba(0, 0, 0, 0.1)'; // Add border for visibility
     }
     setTimeout(function () {
       if (e && e.target) {
-        e.target.style.boxShadow = "0px 4px 0px #A1A2A2";
-        e.target.style.background = "#FFFFFF";
-        e.target.style.color = "#000"; // Ensure text is visible in all modes
-        e.target.style.border = "1px solid rgba(0, 0, 0, 0.1)"; // Add border for visibility
+        e.target.style.boxShadow = '0px 4px 0px #A1A2A2';
+        e.target.style.background = '#FFFFFF';
+        e.target.style.color = '#000'; // Ensure text is visible in all modes
+        e.target.style.border = '1px solid rgba(0, 0, 0, 0.1)'; // Add border for visibility
       }
     }, 100);
     this.debounce();
@@ -419,14 +419,14 @@ class MorseBoard {
           letter: _this.morseDictionary[_this.output.value],
         };
         if (_this.config.autoCommit) {
-          if (typeof window.CustomEvent !== "function") {
+          if (typeof window.CustomEvent !== 'function') {
             var _CustomEvent = function _CustomEvent(event, params) {
               params = params || {
                 bubbles: false,
                 cancelable: false,
                 detail: undefined,
               };
-              var evt = document.createEvent("CustomEvent");
+              var evt = document.createEvent('CustomEvent');
               evt.initCustomEvent(
                 event,
                 params.bubbles,
@@ -439,7 +439,7 @@ class MorseBoard {
             window.CustomEvent = _CustomEvent;
           }
           _this.output.dispatchEvent(
-            new CustomEvent("commit", {
+            new CustomEvent('commit', {
               detail: eventDetail,
             })
           );
@@ -464,7 +464,7 @@ class MorseBoard {
         this.showNotification(null, true);
       }
     }
-    this.output.value = "";
+    this.output.value = '';
     this.config.onCommit.call(this, e.detail);
   }
 
@@ -484,25 +484,25 @@ class MorseBoard {
 
   showNotification(letter, wrong) {
     var _this2 = this;
-    if (this.config.notificationStyle === "output") {
+    if (this.config.notificationStyle === 'output') {
       this.outputStyleTimeout = setTimeout(function () {
         _this2.output.style.color = wrong
-          ? "rgba(255, 65, 54, 0.8)"
-          : "#231F20";
-        _this2.output.value = wrong ? "∅" : letter;
+          ? 'rgba(255, 65, 54, 0.8)'
+          : '#231F20';
+        _this2.output.value = wrong ? '∅' : letter;
         _this2.outputStyleHideTimeout = setTimeout(function () {
-          _this2.output.value = "";
+          _this2.output.value = '';
         }, _this2.config.debounce - 300);
       }, 0);
     } else {
-      this.el = document.getElementById("notification");
+      this.el = document.getElementById('notification');
       this.el.innerHTML =
         '<span style="display: inline-block; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); vertical-align: middle;">' +
-        (wrong ? "&empty;" : letter) +
-        "</span>";
+        (wrong ? '&empty;' : letter) +
+        '</span>';
       this.el.style.background = wrong
-        ? "rgba(255, 65, 54, 0.8)"
-        : "rgba(0, 0, 0, 0.7)";
+        ? 'rgba(255, 65, 54, 0.8)'
+        : 'rgba(0, 0, 0, 0.7)';
       clearTimeout(this.fadeTimeout);
       var fadeOut = function fadeOut() {
         var el = _this2.el;
@@ -510,7 +510,7 @@ class MorseBoard {
         if (_this2.fadeTimeout) {
           (function fade() {
             if ((el.style.opacity -= 0.1) < 0) {
-              el.style.display = "none";
+              el.style.display = 'none';
             } else {
               requestAnimationFrame(fade);
             }
@@ -520,7 +520,7 @@ class MorseBoard {
       var fadeIn = function fadeIn() {
         var el = _this2.el;
         el.style.opacity = 0;
-        el.style.display = "inline-block";
+        el.style.display = 'inline-block';
         (function fade() {
           var val = parseFloat(el.style.opacity);
           if (!((val += 0.1) > 1)) {
@@ -535,11 +535,11 @@ class MorseBoard {
   }
 
   destroy() {
-    window.removeEventListener("keydown", this.boundOnKeydown);
+    window.removeEventListener('keydown', this.boundOnKeydown);
 
     // Remove keyup event listener if one-switch mode was enabled
     if (this.config.oneSwitchMode) {
-      window.removeEventListener("keyup", this.boundOnKeyup);
+      window.removeEventListener('keyup', this.boundOnKeyup);
     }
 
     // Cancel any ongoing animation
@@ -549,13 +549,13 @@ class MorseBoard {
     }
 
     if (this.dotButton) {
-      this.dotButton.removeEventListener("click", this.boundOnClick);
+      this.dotButton.removeEventListener('click', this.boundOnClick);
     }
     if (this.dashButton) {
-      this.dashButton.removeEventListener("click", this.boundOnClick);
+      this.dashButton.removeEventListener('click', this.boundOnClick);
     }
     if (this.output) {
-      this.output.removeEventListener("commit", this.boundCommit);
+      this.output.removeEventListener('commit', this.boundCommit);
     }
 
     if (this.config.notification && this.el) {
@@ -582,9 +582,9 @@ class MorseBoard {
 
   detectIE() {
     var ua = window.navigator.userAgent;
-    var msie = ua.indexOf("MSIE ");
-    var trident = ua.indexOf("Trident/");
-    var edge = ua.indexOf("Edge/");
+    var msie = ua.indexOf('MSIE ');
+    var trident = ua.indexOf('Trident/');
+    var edge = ua.indexOf('Edge/');
     if (msie > 0 || trident > 0 || edge > 0) {
       return true;
     }
@@ -593,7 +593,7 @@ class MorseBoard {
 
   updateKeyboardHint() {
     // Get the keyboard hint element
-    const keyboardHint = document.querySelector(".keyboard-hint .key-row");
+    const keyboardHint = document.querySelector('.keyboard-hint .key-row');
     if (!keyboardHint) return;
 
     if (this.config.oneSwitchMode) {
@@ -621,13 +621,13 @@ class MorseBoard {
 
     // Add or remove keyup event listener based on mode
     if (enable) {
-      window.addEventListener("keyup", this.boundOnKeyup, false);
+      window.addEventListener('keyup', this.boundOnKeyup, false);
     } else {
-      window.removeEventListener("keyup", this.boundOnKeyup);
+      window.removeEventListener('keyup', this.boundOnKeyup);
 
       // Reset progress indicator when disabling one-switch mode
       if (this.progressIndicator) {
-        this.progressIndicator.style.width = "0%";
+        this.progressIndicator.style.width = '0%';
       }
 
       // Cancel any ongoing animation
@@ -641,8 +641,8 @@ class MorseBoard {
     this.updateKeyboardHint();
 
     // Save preference to localStorage if available
-    if (typeof Storage !== "undefined") {
-      localStorage.setItem("one_switch_mode", enable);
+    if (typeof Storage !== 'undefined') {
+      localStorage.setItem('one_switch_mode', enable);
     }
 
     return enable;
