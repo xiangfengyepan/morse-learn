@@ -13,7 +13,6 @@
 // limitations under the License.
 
 import config from './config';
-import { delay } from './utils';
 import confetti from 'canvas-confetti';
 
 class CongratulationsState {
