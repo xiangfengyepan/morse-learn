@@ -76,7 +76,7 @@ class PracticeState {
     this.currentPhraseIndex = 0;
     this.currentCharIndex = 0;
     this.totalErrors = 0;
-    this.totalWords = 0;
+    this.totalLetters = 0;
     this.startedAt = null;
     this.sessionComplete = false;
     this.morseBoard = null;
@@ -88,7 +88,10 @@ class PracticeState {
     this.currentPhraseIndex = 0;
     this.currentCharIndex = 0;
     this.totalErrors = 0;
-    this.totalWords = this.sessionPhrases.reduce((sum, phrase) => sum + phrase.trim().split(/\s+/).length, 0);
+    this.totalLetters = this.sessionPhrases.reduce(
+      (sum, phrase) => sum + normalizePhrase(phrase).length,
+      0
+    );
     this.sessionComplete = false;
     this.startedAt = Date.now();
     this.incrementPracticeCount();
@@ -291,20 +294,20 @@ class PracticeState {
     this.sessionComplete = true;
     const elapsedMs = Date.now() - this.startedAt;
     const elapsedMinutes = Math.max(elapsedMs / 60000, 0.01);
-    const wpm = Math.round((this.totalWords / elapsedMinutes) * 10) / 10;
+    const lpm = Math.round((this.totalLetters / elapsedMinutes) * 10) / 10;
 
     this.statusText.fill = '#7CFFB2';
-    this.statusText.text = `Session complete. WPM: ${wpm}`;
+    this.statusText.text = `Session complete. LPM: ${lpm}`;
     this.progressText.text = 'All phrases complete';
     this.phraseText.text = 'Great work';
     this.inputText.text = 'You can practice again anytime.';
-    this.statsText.text = `Words: ${this.totalWords} | Errors: ${this.totalErrors} | WPM: ${wpm}`;
+    this.statsText.text = `Letters: ${this.totalLetters} | Errors: ${this.totalErrors} | LPM: ${lpm}`;
 
     localStorage.setItem(PRACTICE_LAST_SESSION_KEY, JSON.stringify({
       finishedAt: new Date().toISOString(),
-      totalWords: this.totalWords,
+      totalLetters: this.totalLetters,
       errors: this.totalErrors,
-      wpm
+      lpm
     }));
 
     this.createEndButtons();
